@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hartley College, Point Pedro — Fiat Lux</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,900&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy-deep:  #1c1f52;
+    --navy:       #2e327b;
+    --navy-mid:   #3f47a3;
+    --gold:       #ffc410;
+    --gold-bright:#ffd94d;
+    --gold-deep:  #b8860a;
+    --cream:      #fbf8f1;
+    --cream-dim:  #f2ecdb;
+    --ink:        #15182a;
+    --ink-soft:   #52566b;
+    --cream-text: #f7f4e8;
+    --line: rgba(46,50,123,0.14);
+
+    --font-display: 'Fraunces', serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{ background: var(--cream); color: var(--ink); font-family: var(--font-body); line-height:1.65; overflow-x:hidden; }
+  a{ color:inherit; text-decoration:none; }
+  ul{ list-style:none; }
+  img{ max-width:100%; display:block; }
+  ::selection{ background: var(--gold); color: var(--navy-deep); }
+  :focus-visible{ outline: 2px solid var(--gold); outline-offset: 3px; }
+
+  .wrap{ max-width:1200px; margin:0 auto; padding:0 32px; }
+  .eyebrow{ font-family:var(--font-mono); text-transform:uppercase; letter-spacing:.16em; font-size:11.5px; color: var(--gold-deep); display:flex; align-items:center; gap:10px; font-weight:700; }
+  .eyebrow::before{ content:""; width:26px; height:1px; background: var(--gold-deep); display:inline-block; }
+  .eyebrow.on-dark{ color: var(--gold-bright); }
+  .eyebrow.on-dark::before{ background: var(--gold-bright); }
+
+  .reveal{ opacity:0; transform: translateY(26px); transition: opacity .7s ease, transform .7s ease; }
+  .reveal.in{ opacity:1; transform:none; }
+
+  /* ===== Utility bar ===== */
+  .utility{ background: var(--navy-deep); color: var(--cream-text); font-family: var(--font-mono); font-size:11.5px; }
+  .utility .wrap{ display:flex; justify-content:space-between; align-items:center; padding:8px 32px; flex-wrap:wrap; gap:6px; }
+  .utility a{ opacity:.85; }
+  .utility a:hover{ opacity:1; color: var(--gold-bright); }
+  .utility .u-left{ display:flex; gap:22px; }
+  .utility .u-right{ display:flex; gap:14px; align-items:center; }
+  .utility .dot{ opacity:.4; }
+
+  /* ===== Nav ===== */
+  header{ position:sticky; top:0; z-index:100; background: rgba(251,248,241,0.92); backdrop-filter: blur(8px); border-bottom:1px solid var(--line); }
+  header .nav-inner{ display:flex; align-items:center; justify-content:space-between; padding:14px 0; }
+  .brand{ display:flex; align-items:center; gap:13px; }
+  .brand-mark{ width:46px; height:46px; flex-shrink:0; border-radius:50%; overflow:hidden; box-shadow: 0 0 0 2px var(--cream), 0 0 0 3px var(--gold); }
+  .brand-mark img{ width:100%; height:100%; object-fit:cover; transform: scale(1.35); }
+  .brand-text .name{ font-family: var(--font-display); font-weight:700; font-size:18.5px; color: var(--navy-deep); letter-spacing:.005em; }
+  .brand-text .place{ font-family: var(--font-mono); font-size:9.5px; letter-spacing:.14em; text-transform:uppercase; color: var(--gold-deep); }
+  nav.links{ display:flex; gap:28px; align-items:center; }
+  nav.links a{ font-size:13.5px; font-weight:600; color: var(--ink); position:relative; padding-bottom:3px; }
+  nav.links a::after{ content:""; position:absolute; left:0; bottom:0; height:2px; width:0; background: var(--gold); transition:width .25s ease; }
+  nav.links a:hover::after{ width:100%; }
+  nav.links a:hover{ color: var(--navy); }
+  .nav-cta{ background: var(--navy-deep); color:var(--cream-text) !important; padding:10px 20px; border-radius:2px; font-size:12.5px !important; }
+  .nav-cta:hover{ background: var(--navy); }
+  .nav-cta::after{ display:none; }
+  .menu-toggle{ display:none; flex-direction:column; gap:5px; cursor:pointer; }
+  .menu-toggle span{ width:24px; height:2px; background: var(--navy-deep); }
+
+  /* ===== Hero ===== */
+  .hero{ position:relative; min-height:94vh; display:flex; align-items:flex-end; overflow:hidden; }
+  .hero-bg{ position:absolute; inset:0; }
+  .hero-bg img{ width:100%; height:100%; object-fit:cover; }
+  .hero-bg::after{ content:""; position:absolute; inset:0; background: linear-gradient(180deg, rgba(28,31,82,0.5) 0%, rgba(28,31,82,0.55) 40%, rgba(21,24,60,0.95) 100%); }
+  .crest-watermark{ position:absolute; top:8%; right:-6%; width:560px; height:560px; opacity:.08; pointer-events:none; }
+  .crest-watermark img{ width:100%; }
+
+  .hero-inner{ position:relative; z-index:2; width:100%; padding: 0 32px 60px; max-width:1200px; margin:0 auto; color: var(--cream-text); }
+  .hero-motto{ font-family: var(--font-mono); text-transform:uppercase; letter-spacing:.32em; color: var(--gold-bright); font-size:12.5px; margin-bottom:20px; display:flex; align-items:center; gap:12px; }
+  .hero-motto::before{ content:""; width:30px; height:1px; background: var(--gold-bright); }
+  h1.hero-title{ font-family: var(--font-display); font-weight:700; font-size: clamp(38px,6.2vw,78px); line-height:1.0; letter-spacing:-.01em; max-width:820px; }
+  h1.hero-title em{ font-style:italic; font-weight:500; color: var(--gold-bright); }
+  .hero-sub{ margin-top:22px; font-size:16.5px; max-width:540px; color: rgba(247,244,232,0.82); }
+  .hero-cta{ margin-top:32px; display:flex; gap:16px; flex-wrap:wrap; }
+  .btn{ display:inline-flex; align-items:center; gap:9px; padding:14px 26px; font-size:13.5px; font-weight:700; border-radius:2px; cursor:pointer; border:1px solid transparent; font-family: var(--font-body); transition: transform .22s ease, background .22s ease, border-color .22s ease, color .22s ease; }
+  .btn-gold{ background: var(--gold); color: var(--navy-deep); }
+  .btn-gold:hover{ background: var(--gold-bright); transform: translateY(-2px); }
+  .btn-ghost{ border-color: rgba(247,244,232,0.4); color: var(--cream-text); }
+  .btn-ghost:hover{ border-color: var(--gold-bright); color: var(--gold-bright); transform: translateY(-2px); }
+
+  .hero-stats{ display:grid; grid-template-columns: repeat(4,1fr); gap:1px; background: rgba(255,196,16,0.22); border:1px solid rgba(255,196,16,.22); margin-top:44px; max-width:780px; }
+  .hero-stats .stat{ background: rgba(21,24,60,0.5); padding:16px 18px; }
+  .hero-stats .stat b{ display:block; font-family: var(--font-display); font-size:23px; color: var(--gold-bright); font-weight:700; }
+  .hero-stats .stat span{ font-size:10.2px; text-transform:uppercase; letter-spacing:.06em; color: rgba(247,244,232,0.65); }
+
+  /* ===== Anthem strip ===== */
+  .anthem{ background: var(--navy-deep); color: var(--cream-text); padding:26px 0; }
+  .anthem .wrap{ display:flex; align-items:center; justify-content:space-between; gap:24px; flex-wrap:wrap; }
+  .anthem-label{ display:flex; align-items:center; gap:16px; }
+  .anthem-label .icon-ring{ width:48px; height:48px; border-radius:50%; border:1px solid rgba(255,196,16,.4); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .anthem-label h4{ font-family: var(--font-display); font-size:16px; font-weight:600; }
+  .anthem-label span{ font-size:12px; color: rgba(247,244,232,.65); }
+  .anthem-controls{ display:flex; align-items:center; gap:14px; }
+  #playBtn{ width:42px; height:42px; border-radius:50%; background: var(--gold); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; transition: background .2s; flex-shrink:0; }
+  #playBtn:hover{ background: var(--gold-bright); }
+  #playBtn svg{ width:16px; height:16px; }
+  .anthem-bars{ display:flex; align-items:center; gap:3px; height:24px; }
+  .anthem-bars span{ width:3px; background: var(--gold); border-radius:2px; height:6px; transition: height .15s ease; }
+  .anthem-time{ font-family: var(--font-mono); font-size:11px; color: rgba(247,244,232,.6); min-width:80px; }
+
+  /* ===== Marquee ===== */
+  .strip{ background: var(--gold); color: var(--navy-deep); overflow:hidden; white-space:nowrap; padding:10px 0; }
+  .strip .track{ display:inline-block; animation: marquee 32s linear infinite; font-family: var(--font-mono); font-weight:700; font-size:12px; letter-spacing:.08em; }
+  .strip span{ margin:0 24px; text-transform:uppercase; }
+  @keyframes marquee{ from{ transform: translateX(0);} to{ transform: translateX(-50%);} }
+
+  section{ padding:104px 0; }
+  .section-head{ max-width:680px; margin-bottom:56px; }
+  .section-head h2{ font-family: var(--font-display); font-weight:700; font-size: clamp(28px,3.2vw,42px); margin-top:14px; letter-spacing:-.01em; color: var(--navy-deep); }
+  .section-head p{ margin-top:14px; color: var(--ink-soft); font-size:15.5px; max-width:540px; }
+  .section-head.on-dark h2{ color: var(--cream-text); }
+  .section-head.on-dark p{ color: rgba(247,244,232,.68); }
+
+  /* ===== Vision / Mission ===== */
+  .vision-lede{ background: var(--cream-dim); border:1px solid var(--line); padding:44px 48px; margin-bottom:1px; }
+  .vision-lede p{ font-family: var(--font-display); font-style:italic; font-size: clamp(20px,2.4vw,28px); color: var(--navy-deep); font-weight:500; line-height:1.4; max-width:880px; }
+  .mv-grid{ display:grid; grid-template-columns: repeat(3,1fr); gap:1px; background: var(--line); border:1px solid var(--line); border-top:none; }
+  .mv-card{ background: var(--cream); padding:38px 34px; }
+  .mv-card .num{ font-family: var(--font-mono); color: var(--gold-deep); font-size:11.5px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; }
+  .mv-card h3{ font-family: var(--font-display); font-size:21px; margin:14px 0 12px; font-weight:600; color: var(--navy-deep); }
+  .mv-card p{ font-size:14px; color: var(--ink-soft); }
+  .motto-banner{ margin-top:1px; background: var(--navy-deep); color:var(--cream-text); padding:36px 34px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px; }
+  .motto-banner h3{ font-family: var(--font-display); font-style:italic; font-size:26px; color: var(--gold-bright); }
+  .motto-banner span{ font-family: var(--font-mono); font-size:11.5px; letter-spacing:.1em; text-transform:uppercase; color: rgba(247,244,232,.7); }
+
+  /* ===== History – horizon timeline ===== */
+  .history{ background: var(--navy-deep); color: var(--cream-text); position:relative; overflow:hidden; }
+  .history-horizon{ position:absolute; left:0; right:0; bottom:0; height:2px; background: linear-gradient(90deg, transparent, var(--gold), transparent); opacity:.5; }
+  .timeline{ position:relative; margin-top:10px; }
+  .timeline::before{ content:""; position:absolute; left:118px; top:0; bottom:0; width:1px; background: linear-gradient(var(--gold), rgba(255,196,16,0.06)); }
+  .t-item{ display:grid; grid-template-columns:118px 1fr; gap:40px; padding:22px 0; border-bottom:1px solid rgba(247,244,232,0.08); position:relative; }
+  .t-item:last-child{ border-bottom:none; }
+  .t-year{ font-family: var(--font-display); font-size:19px; font-weight:700; color: var(--gold-bright); position:relative; }
+  .t-year::after{ content:""; position:absolute; right:-45px; top:8px; width:9px; height:9px; border-radius:50%; background: var(--gold); box-shadow: 0 0 0 4px rgba(255,196,16,.16); }
+  .t-item h4{ font-weight:700; font-size:15px; margin-bottom:5px; }
+  .t-item p{ font-size:13.5px; color: rgba(247,244,232,.68); max-width:660px; }
+  .history-source{ margin-top:36px; font-family: var(--font-mono); font-size:11px; color: rgba(247,244,232,.45); }
+
+  /* ===== Feature alternating blocks ===== */
+  .feature-block{ display:grid; grid-template-columns: 1fr 1fr; gap:64px; align-items:center; }
+  .feature-block + .feature-block{ margin-top:90px; }
+  .feature-block.reverse .f-media{ order:2; }
+  .feature-block.reverse .f-text{ order:1; }
+  .f-media{ position:relative; }
+  .f-media .frame{ position:relative; border:1px solid var(--line); padding:10px; background: var(--cream); }
+  .f-media img{ width:100%; height:380px; object-fit:cover; }
+  .f-media .badge{ position:absolute; bottom:-16px; right:24px; background: var(--navy-deep); color: var(--gold-bright); font-family: var(--font-mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; padding:9px 16px; font-weight:700; }
+  .f-text h3{ font-family: var(--font-display); font-size: clamp(24px,2.6vw,33px); font-weight:700; color: var(--navy-deep); margin:14px 0 16px; line-height:1.15; }
+  .f-text p{ color: var(--ink-soft); font-size:15px; margin-bottom:14px; }
+  .f-stats{ display:flex; gap:26px; margin-top:20px; flex-wrap:wrap; }
+  .f-stats div b{ display:block; font-family:var(--font-display); font-size:25px; color: var(--navy-deep); font-weight:700; }
+  .f-stats div span{ font-family:var(--font-mono); font-size:9.5px; text-transform:uppercase; letter-spacing:.07em; color: var(--ink-soft); }
+  .f-list{ margin-top:16px; display:flex; flex-direction:column; gap:10px; }
+  .f-list li{ list-style:none; font-size:13.5px; color: var(--ink-soft); display:flex; gap:10px; align-items:baseline; }
+  .f-list li::before{ content:"—"; color: var(--gold-deep); font-weight:700; }
+  .f-list b{ color: var(--navy-deep); }
+
+  /* ===== Houses ===== */
+  .houses{ background: var(--cream-dim); }
+  .house-grid{ display:grid; grid-template-columns: repeat(4,1fr); gap:22px; }
+  .house-card{ background: var(--cream); border-top:5px solid var(--house-color, var(--gold)); padding:28px 24px; transition: transform .3s ease, box-shadow .3s ease; }
+  .house-card:hover{ transform: translateY(-6px); box-shadow: 0 18px 36px rgba(28,31,82,.1); }
+  .house-card .swatch{ width:32px; height:32px; border-radius:50%; background: var(--house-color, var(--gold)); margin-bottom:16px; }
+  .house-card h4{ font-family: var(--font-display); font-size:18px; font-weight:600; color: var(--navy-deep); margin-bottom:8px; }
+  .house-card p{ font-size:12.5px; color: var(--ink-soft); }
+
+  /* ===== Principals ===== */
+  .principals-wrap{ display:grid; grid-template-columns: 1fr 1fr; gap:64px; align-items:start; }
+  table.principal-table{ width:100%; border-collapse:collapse; font-size:13px; }
+  table.principal-table th{ text-align:left; font-family: var(--font-mono); text-transform:uppercase; letter-spacing:.08em; font-size:10px; color: var(--gold-deep); padding:10px 12px; border-bottom:2px solid var(--navy-deep); }
+  table.principal-table td{ padding:9px 12px; border-bottom:1px solid var(--line); color: var(--ink-soft); }
+  table.principal-table tr:hover td{ background: rgba(255,196,16,.08); color: var(--ink); }
+  table.principal-table td.current{ color: var(--navy-deep); font-weight:700; }
+  .principal-scroll{ max-height:400px; overflow-y:auto; border:1px solid var(--line); }
+  .principal-note{ margin-top:14px; font-size:11.5px; color: var(--ink-soft); font-family: var(--font-mono); line-height:1.6; }
+
+  .principal-spot{ background: var(--navy-deep); color: var(--cream-text); padding:38px; position:relative; }
+  .principal-spot .photo{ width:112px; height:112px; border-radius:50%; overflow:hidden; border:3px solid var(--gold); margin-bottom:20px; }
+  .principal-spot .photo img{ width:100%; height:100%; object-fit:cover; }
+  .principal-spot blockquote{ font-family: var(--font-display); font-style:italic; font-size:19px; line-height:1.4; font-weight:500; }
+  .principal-spot cite{ display:block; margin-top:18px; font-style:normal; font-family: var(--font-mono); font-size:11.5px; color: var(--gold-bright); letter-spacing:.05em; }
+  .principal-spot .role{ font-family: var(--font-mono); font-size:10px; text-transform:uppercase; letter-spacing:.1em; color: rgba(247,244,232,.6); margin-top:6px; }
+
+  .leadership-strip{ margin-top:38px; display:grid; grid-template-columns: repeat(3,1fr); gap:1px; background: var(--line); border:1px solid var(--line); }
+  .lead-card{ background: var(--cream); padding:22px 24px; }
+  .lead-card h4{ font-family: var(--font-display); font-size:16px; font-weight:600; color: var(--navy-deep); margin:8px 0 4px; }
+  .lead-card p{ font-size:12px; color: var(--ink-soft); }
+
+  /* ===== Facts band ===== */
+  .facts{ background: var(--gold); color: var(--navy-deep); padding:60px 0; }
+  .facts-grid{ display:grid; grid-template-columns: repeat(4,1fr); gap:30px; text-align:center; }
+  .facts-grid .f b{ display:block; font-family: var(--font-display); font-size:36px; font-weight:800; }
+  .facts-grid .f span{ font-family: var(--font-mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; opacity:.85; }
+
+  /* ===== News grid ===== */
+  .news-grid{ display:grid; grid-template-columns: 1.3fr 1fr 1fr; gap:26px; }
+  .news-card{ background: var(--cream); border:1px solid var(--line); display:flex; flex-direction:column; transition: transform .3s ease, box-shadow .3s ease; }
+  .news-card:hover{ transform: translateY(-6px); box-shadow: 0 20px 40px rgba(28,31,82,.12); }
+  .news-card.feature{ grid-row: span 2; }
+  .news-card .thumb{ aspect-ratio: 16/10; overflow:hidden; }
+  .news-card.feature .thumb{ aspect-ratio:16/12; }
+  .news-card .thumb img{ width:100%; height:100%; object-fit:cover; transition: transform .5s ease; }
+  .news-card:hover .thumb img{ transform: scale(1.06); }
+  .news-card .body{ padding:22px 22px 26px; flex:1; display:flex; flex-direction:column; }
+  .news-card .date{ font-family:var(--font-mono); font-size:10px; text-transform:uppercase; letter-spacing:.1em; color: var(--gold-deep); font-weight:700; }
+  .news-card h3{ font-family: var(--font-display); font-size:18.5px; font-weight:600; margin:10px 0 8px; color: var(--navy-deep); line-height:1.25; }
+  .news-card.feature h3{ font-size:23px; }
+  .news-card p{ font-size:13px; color: var(--ink-soft); flex:1; }
+  .news-card .tag{ margin-top:14px; font-family: var(--font-mono); font-size:9.5px; text-transform:uppercase; letter-spacing:.08em; color: var(--navy); font-weight:700; }
+
+  /* ===== Contact ===== */
+  .contact{ background: var(--ink); color: var(--cream-text); }
+  .contact-grid{ display:grid; grid-template-columns: 1fr 1fr; gap:60px; }
+  .contact-info .row{ display:flex; gap:18px; padding:18px 0; border-bottom:1px solid rgba(247,244,232,.12); }
+  .contact-info .row .icon{ width:20px; height:20px; color: var(--gold-bright); flex-shrink:0; margin-top:2px; }
+  .contact-info .row b{ display:block; font-size:10.5px; text-transform:uppercase; letter-spacing:.1em; color: var(--gold-bright); font-family: var(--font-mono); margin-bottom:4px; }
+  .contact-info .row span{ font-size:15px; color: rgba(247,244,232,.85); }
+  .social-row{ display:flex; gap:14px; margin-top:26px; }
+  .social-row a{ width:40px; height:40px; border:1px solid rgba(247,244,232,.25); border-radius:50%; display:flex; align-items:center; justify-content:center; transition: border-color .25s, background .25s; }
+  .social-row a:hover{ border-color: var(--gold-bright); background: rgba(255,196,16,.12); }
+  .social-row svg{ width:16px; height:16px; }
+  form.cform{ display:flex; flex-direction:column; gap:16px; }
+  form.cform input, form.cform textarea{ background: rgba(247,244,232,.06); border:1px solid rgba(247,244,232,.2); padding:14px 16px; color: var(--cream-text); font-family: var(--font-body); font-size:14px; outline:none; transition: border-color .25s; }
+  form.cform input::placeholder, form.cform textarea::placeholder{ color: rgba(247,244,232,.4); }
+  form.cform input:focus, form.cform textarea:focus{ border-color: var(--gold-bright); }
+  form.cform button{ align-self:flex-start; margin-top:6px; }
+
+  footer{ background: #0f1128; color: rgba(247,244,232,.5); padding:34px 0; }
+  .foot-inner{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px; font-size:12px; }
+  .foot-inner .motto{ font-family: var(--font-mono); letter-spacing:.1em; color: var(--gold); text-transform:uppercase; }
+
+  .progress{ position:fixed; top:0; left:0; height:3px; background: var(--gold); z-index:200; width:0%; }
+
+  @media (max-width: 980px){
+    .news-grid{ grid-template-columns:1fr; }
+    .news-card.feature{ grid-row:auto; }
+    .feature-block{ grid-template-columns:1fr; gap:34px; }
+    .feature-block.reverse .f-media, .feature-block.reverse .f-text{ order:0; }
+    .principals-wrap{ grid-template-columns:1fr; }
+    .contact-grid{ grid-template-columns:1fr; }
+    .house-grid{ grid-template-columns: repeat(2,1fr); }
+    .mv-grid{ grid-template-columns:1fr; }
+    .facts-grid{ grid-template-columns: repeat(2,1fr); }
+    .hero-stats{ grid-template-columns: repeat(2,1fr); }
+    .leadership-strip{ grid-template-columns:1fr; }
+    .vision-lede{ padding:32px 28px; }
+  }
+  @media (max-width: 760px){
+    nav.links{ position:fixed; top:0; right:0; height:100vh; width:min(80vw,320px); background: var(--navy-deep); flex-direction:column; padding:110px 36px; gap:26px; transform: translateX(100%); transition: transform .4s ease; align-items:flex-start; }
+    nav.links.open{ transform: translateX(0); }
+    nav.links a{ color: var(--cream-text); }
+    .menu-toggle{ display:flex; }
+    .nav-cta{ margin-top:10px; }
+    .utility .u-left{ display:none; }
+    .timeline::before{ left:76px; }
+    .t-item{ grid-template-columns:76px 1fr; gap:20px; }
+    .t-year::after{ right:-25px; }
+    .anthem .wrap{ flex-direction:column; align-items:flex-start; }
+  }
+  @media (prefers-reduced-motion: reduce){ *{ animation:none !important; transition:none !important; } }
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+
+<div class="utility">
+  <div class="wrap">
+    <div class="u-left">
+      <a href="tel:0212260292">☎ 021 226 0292</a>
+      <span>Point Pedro, Jaffna, Sri Lanka</span>
+    </div>
+    <div class="u-right">
+      <a href="#">EN</a><span class="dot">·</span><a href="#">தமிழ்</a>
+    </div>
+  </div>
+</div>
+
+<header id="siteHeader">
+  <div class="wrap nav-inner">
+    <a href="#top" class="brand">
+      <span class="brand-mark"><img src="logo.png" alt="Hartley College crest"></span>
+      <span class="brand-text">
+        <span class="name">Hartley College</span>
+        <span class="place">Point Pedro · Est. 1838</span>
+      </span>
+    </a>
+    <nav class="links" id="navLinks">
+      <a href="#history">History</a>
+      <a href="#academics">Academics</a>
+      <a href="#houses">Houses</a>
+      <a href="#news">News</a>
+      <a href="#principal">Principal</a>
+      <a href="#contact" class="nav-cta">Contact Us</a>
+    </nav>
+    <div class="menu-toggle" id="menuToggle"><span></span><span></span><span></span></div>
+  </div>
+</header>
+
+<section class="hero" id="top">
+  <div class="hero-bg"><img src="https://www.hartley.lk/templates/a4joomla-countryside-free/images/countryside1.jpg" alt="Hartley College campus, Point Pedro"></div>
+  <div class="crest-watermark"><img src="logo.png" alt=""></div>
+  <div class="hero-inner">
+    <div class="hero-motto reveal in">FIAT LUX — Let There Be Light</div>
+    <h1 class="hero-title">Hartley College,<br><em>Point Pedro</em></h1>
+    <p class="hero-sub">Founded in 1838 by Rev. Dr. Peter Percival, Hartley College has spent 186 years shaping scholars, athletes and leaders from the northern tip of Sri Lanka — one of the island's oldest and most storied schools.</p>
+    <div class="hero-cta">
+      <a href="#history" class="btn btn-gold">Our History</a>
+      <a href="#contact" class="btn btn-ghost">Get in Touch</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><b>1,178</b><span>Students, Grades 6–13</span></div>
+      <div class="stat"><b>68+</b><span>Teaching Staff</span></div>
+      <div class="stat"><b>4</b><span>Houses</span></div>
+      <div class="stat"><b>186</b><span>Years Strong</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="anthem">
+  <div class="wrap">
+    <div class="anthem-label">
+      <span class="icon-ring">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffd94d" stroke-width="1.5"><path d="M9 18 V5 L20 3 V16"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg>
+      </span>
+      <div><h4>The Hartley College Anthem</h4><span>Recorded in English · J/Hartley College, Point Pedro</span></div>
+    </div>
+    <div class="anthem-controls">
+      <button id="playBtn" aria-label="Play anthem">
+        <svg id="playIcon" viewBox="0 0 24 24" fill="#1c1f52"><path d="M8 5 L19 12 L8 19 Z"/></svg>
+      </button>
+      <div class="anthem-bars" id="bars">
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
+      <span class="anthem-time" id="atime">00:00 / 00:00</span>
+    </div>
+    <audio id="anthemAudio" src="https://www.hartley.lk/images/Audio/Anthem_Hartley_English.mp3" preload="none"></audio>
+  </div>
+</div>
+
+<div class="strip">
+  <div class="track">
+    <span>★ FIAT LUX — LET THERE BE LIGHT</span>
+    <span>★ FOUNDED 1838 BY REV. DR. PETER PERCIVAL</span>
+    <span>★ RENAMED HARTLEY COLLEGE IN 1916</span>
+    <span>★ NATIONAL RECORD HOLDERS IN ATHLETICS</span>
+    <span>★ SERVING POINT PEDRO SINCE THE 19TH CENTURY</span>
+    <span>★ FIAT LUX — LET THERE BE LIGHT</span>
+    <span>★ FOUNDED 1838 BY REV. DR. PETER PERCIVAL</span>
+    <span>★ RENAMED HARTLEY COLLEGE IN 1916</span>
+    <span>★ NATIONAL RECORD HOLDERS IN ATHLETICS</span>
+    <span>★ SERVING POINT PEDRO SINCE THE 19TH CENTURY</span>
+  </div>
+</div>
+
+<!-- VISION / MISSION / MOTTO -->
+<section id="vision">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Why We're Here</span>
+      <h2>Vision, mission &amp; motto</h2>
+      <p>Word for word, as set out by the college — the commitments that have guided Hartley since 1838.</p>
+    </div>
+    <div class="reveal">
+      <div class="vision-lede">
+        <p>"To be the leading school in Sri Lanka, serving all pupils through our strength and commitment to academic excellence."</p>
+      </div>
+      <div class="mv-grid">
+        <div class="mv-card">
+          <span class="num">For Our Students</span>
+          <h3>A comprehensive education</h3>
+          <p>We will meet students' expectations by providing a comprehensive, competitive and innovative education through a friendly, competent and motivated academic staff.</p>
+        </div>
+        <div class="mv-card">
+          <span class="num">For Our Teachers</span>
+          <h3>Partners in the mission</h3>
+          <p>We will treat our staff as partners toward institutional betterment, fostering teamwork and recognising those delivering the highest level of academic service.</p>
+        </div>
+        <div class="mv-card">
+          <span class="num">For Our Society</span>
+          <h3>Rooted in Point Pedro</h3>
+          <p>We will be a partner for, and contribute to, the cultural, educational, ecological, economic and social development of the area.</p>
+        </div>
+      </div>
+      <div class="motto-banner">
+        <h3>"Fiat Lux" — Let there be light</h3>
+        <span>The college motto since 1838</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ACADEMICS / SPORTS / CULTURE -->
+<section class="houses" id="academics" style="background:var(--cream)">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">What Sets Us Apart</span>
+      <h2>Academics, sport &amp; innovation</h2>
+      <p>186 years of results — in the examination hall, on the track, and on the national stage.</p>
+    </div>
+
+    <div class="feature-block reveal">
+      <div class="f-media">
+        <div class="frame"><img src="https://www.hartley.lk/images/News/HC-6-4-Panner-al-2017.jpg" alt="G.C.E. Advanced Level achievers notice"></div>
+        <div class="badge">Academics</div>
+      </div>
+      <div class="f-text">
+        <span class="eyebrow">Examination Results</span>
+        <h3>A tradition of island-level rankings</h3>
+        <p>In 1981, K. Ramakrishnan topped the G.C.E. Advanced Level with 360 marks; the following year three students — including a set of twins — scored 4 distinctions, a feat achieved by no other school in the island that year. The tradition continues: S. Thuvarakan took the 1st island rank in Physical Science in 2017, and Kanthathasan Thasarath the 2nd in 2025.</p>
+        <p>Between 1986 and 1994 alone, more than a dozen Hartleyites won scholarships to study Medicine and Engineering in Australia after scoring 3A or 4A passes — a run that placed the college among the most competitive Tamil-medium schools on the island.</p>
+        <ul class="f-list">
+          <li><b>360 marks</b> — Island-topping A/L score, K. Ramakrishnan, 1981</li>
+          <li><b>2nd, National Level</b> — A.C. John Niraj, Mathematics, 2009; competed at the Asian Mathematical Olympiad, Taiwan</li>
+          <li><b>1st &amp; 2nd Island Ranks</b> — Physical Science, G.C.E. A/L, 2017 &amp; 2025</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="feature-block reverse reveal">
+      <div class="f-media">
+        <div class="frame"><img src="https://www.hartley.lk/images/News/Mithunraj.jpg" alt="Hartley College athletics champion with medals"></div>
+        <div class="badge">Athletics</div>
+      </div>
+      <div class="f-text">
+        <span class="eyebrow">On The Field</span>
+        <h3>A discus-throwing dynasty</h3>
+        <p>Hartley's throwers have carried national colours for two decades. Vadiveswaran Harikaran won Colours Awards in discus at Under-17, Under-19 and Under-21 level between 2007 and 2010; T. Abishanth and B. Ananth took gold and silver in the 2016 Junior National Championship; S. Mithunraj set a national U-15 discus record in 2017 and later took three golds with a national hammer-throw record at the 2022 Junior Nationals.</p>
+        <p>The college has also produced national boxing champions — S. Jivanth and S. Kiritharan both took 1st place at the Sri Lanka Schools Boxing Association nationals in 2015 — alongside pole vault, chess and a cricket programme dating to 1930.</p>
+        <div class="f-stats">
+          <div><b>1930</b><span>Cricket Introduced</span></div>
+          <div><b>4</b><span>National Discus Titles, 2007–2016</span></div>
+          <div><b>2015</b><span>Twin Boxing Golds</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="feature-block reveal">
+      <div class="f-media">
+        <div class="frame"><img src="https://www.hartley.lk/images/News/geek1.jpg" alt="Students at a robotics and innovation competition"></div>
+        <div class="badge">Innovation &amp; Culture</div>
+      </div>
+      <div class="f-text">
+        <span class="eyebrow">Beyond The Classroom</span>
+        <h3>From Tamil Day to the Maths Olympiad</h3>
+        <p>Hartley's choirs and orators have won 1st place at the National Level Tamil Day competition in multiple years running, while Mahendran Saivatharsan took gold at the National Young Inventors Competition in 2014. In 2016, S. Jathusan represented Sri Lanka at the International Mathematical Olympiad after winning through the national round.</p>
+        <p>Today that spirit continues through clubs such as Aerowings and regular wins at the Yarl Geek Challenge robotics and innovation competition.</p>
+        <ul class="f-list">
+          <li><b>Multiple 1st places</b> — National Level Tamil Day, group &amp; solo song</li>
+          <li><b>Gold Medal</b> — National Young Inventors Competition, 2014</li>
+          <li><b>International Level</b> — Mathematical Olympiad, 2016</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOUSES -->
+<section class="houses" id="houses">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">School Spirit</span>
+      <h2>The four houses</h2>
+      <p>Every Hartleyite belongs to one of four houses, named for principals who shaped the college — competing each year at the Inter-House Athletic Meet.</p>
+    </div>
+    <div class="house-grid reveal">
+      <div class="house-card" style="--house-color:#2e327b"><span class="swatch"></span><h4>Thamotharam</h4><p>Named for Mr. C.P. Thamotharam, principal 1915–1943, who oversaw the college's renaming to Hartley in 1916. Athletic Meet champions in 2019, 2020, 2023, 2024 and 2025.</p></div>
+      <div class="house-card" style="--house-color:#ffc410"><span class="swatch"></span><h4>Sherrad</h4><p>Named for Mr. J.C.T. Sherrard, whose 31-year tenure from 1875 made the school so well known it was called "Sherrad's School." Runners-up in 2020 and 2024/25.</p></div>
+      <div class="house-card" style="--house-color:#3f47a3"><span class="swatch"></span><h4>Kanapathippillai</h4><p>Named for Mr. S. Kanapathipillai, principal 1907–1912, who briefly led the college after Mr. Paulpillai's early passing. First runners-up in 2018 and 2020.</p></div>
+      <div class="house-card" style="--house-color:#b8860a"><span class="swatch"></span><h4>Paulpillai</h4><p>Named for Mr. S.A. Paulpillai, principal in 1906, honouring the college's earliest years of academic ambition. Champions of the 2018 Inter-House Athletic Meet.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- HISTORY -->
+<section class="history" id="history">
+  <div class="wrap">
+    <div class="section-head on-dark reveal">
+      <span class="eyebrow on-dark">A Living Chronicle</span>
+      <h2>186 years, in milestones</h2>
+      <p>Compiled from the college's own historical notes, kept by former Deputy Principal Mr. N. Gunaseelan and staff member Mrs. B. Linashkumar.</p>
+    </div>
+    <div class="timeline reveal">
+      <div class="t-item"><div class="t-year">1838</div><div><h4>Founded as Wesleyan Mission Central School</h4><p>Established by Rev. Dr. Peter Percival — scholar, educationist, and compiler of the English–Tamil dictionary, who also translated the Bible into Tamil.</p></div></div>
+      <div class="t-item"><div class="t-year">1875</div><div><h4>Move to the present site</h4><p>The school relocated to the grounds it occupies today; the old site became a girls' boarding school, now the Methodist Girls' High School.</p></div></div>
+      <div class="t-item"><div class="t-year">1916</div><div><h4>Renamed Hartley College</h4><p>Rev. Marshall Hartley, Secretary of the Methodist Mission for the East, laid the foundation for a science laboratory, and the school took his name.</p></div></div>
+      <div class="t-item"><div class="t-year">1930</div><div><h4>The hostel &amp; cricket</h4><p>The hostel building was constructed and cricket was formally introduced to the college.</p></div></div>
+      <div class="t-item"><div class="t-year">1953</div><div><h4>Centenary celebrated</h4><p>The college marked over a century of continuous service to the students of the region.</p></div></div>
+      <div class="t-item"><div class="t-year">1984</div><div><h4>The library fire</h4><p>The college library, holding 6,690 books, was destroyed by fire along with several classrooms.</p></div></div>
+      <div class="t-item"><div class="t-year">1985–1990</div><div><h4>Displacement and return</h4><p>The school operated from a village 3km away at Puttalai before the entire campus was shifted back to its original site in 1990.</p></div></div>
+      <div class="t-item"><div class="t-year">1989</div><div><h4>150th anniversary</h4><p>A commemorative postage stamp and first-day cover were issued to mark the sesquicentennial.</p></div></div>
+      <div class="t-item"><div class="t-year">2012</div><div><h4>Website launched</h4><p>The official Hartley College website was declared open, alongside new infrastructure including an inner road, canteen and water tank funded by international donors.</p></div></div>
+      <div class="t-item"><div class="t-year">2013</div><div><h4>175th anniversary</h4><p>Four days of exhibitions, tournaments and a magazine release, marked with a second commemorative postage stamp.</p></div></div>
+      <div class="t-item"><div class="t-year">2014</div><div><h4>Iyan Karan Hostel opens</h4><p>Old boy and German senator Ian Karan funded a new hostel, opened in the presence of the Chief Minister of the Northern Province. Mr. T. Muhunthan took over as principal the same year.</p></div></div>
+      <div class="t-item"><div class="t-year">2015</div><div><h4>Technology Lab &amp; a Prime Ministerial visit</h4><p>The Technology Lab opened, and Prime Minister Hon. Ranil Wickremesinghe paid an official visit to the school on 27th March.</p></div></div>
+      <div class="t-item"><div class="t-year">2024</div><div><h4>Dr. V.K. Samuel Laboratory opens</h4><p>A three-storey science laboratory, funded by Ian Karan in memory of his brother, opened with dedicated floors for Chemistry, Physics and Biology.</p></div></div>
+      <div class="t-item"><div class="t-year">2025</div><div><h4>New leadership</h4><p>Mr. V. Uthayamohan assumed duties as principal, continuing a line of leadership recorded since 1851.</p></div></div>
+    </div>
+    <div class="history-source">Source: Hartley College Historical Notes, hartley.lk</div>
+  </div>
+</section>
+
+<!-- PRINCIPALS -->
+<section id="principal">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Leadership Since 1851</span>
+      <h2>Our principals</h2>
+      <p>Eighteen principals are on the college's official record since 1851; the college has continued under further leadership since.</p>
+    </div>
+    <div class="principals-wrap reveal">
+      <div>
+        <div class="principal-scroll">
+          <table class="principal-table">
+            <thead><tr><th>#</th><th>Name</th><th>Period</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>Mr. D.P. Niles</td><td>1851–1868</td></tr>
+              <tr><td>2</td><td>Mr. Samuel Hensman</td><td>1868–1875</td></tr>
+              <tr><td>3</td><td>Mr. J.C.T. Sherrard</td><td>1875–1906</td></tr>
+              <tr><td>4</td><td>Mr. S.A. Paulpillai</td><td>1906–1907</td></tr>
+              <tr><td>5</td><td>Mr. S. Kanapathipillai</td><td>1907–1912</td></tr>
+              <tr><td>6</td><td>Mr. E.A. Abraham</td><td>1912–1914</td></tr>
+              <tr><td>7</td><td>Mr. C.P. Thamotheram</td><td>1915–1943</td></tr>
+              <tr><td>8</td><td>Mr. K. Pooranampillai</td><td>1943–1967</td></tr>
+              <tr><td>9</td><td>Mr. S. Ratnasabapathy</td><td>1967–1971</td></tr>
+              <tr><td>10</td><td>Mr. C. Rajadurai</td><td>1971–1973</td></tr>
+              <tr><td>11</td><td>Mr. P. Ahamparam</td><td>1973–1975</td></tr>
+              <tr><td>12</td><td>Mr. W.N.S. Samuel</td><td>1975–1985</td></tr>
+              <tr><td>13</td><td>Mr. P. Balasingam</td><td>1985–1993</td></tr>
+              <tr><td>14</td><td>Mr. K. Nadarajah</td><td>1993–1997</td></tr>
+              <tr><td>15</td><td>Mr. P. Venugopal</td><td>1997–1999</td></tr>
+              <tr><td>16</td><td>Mr. M. Shreepathy</td><td>2000–2002</td></tr>
+              <tr><td>17</td><td>Mr. V. Pathmanathan</td><td>2003–2005</td></tr>
+              <tr><td>18</td><td>Mr. N. Theivendrarajah</td><td>2006–2014</td></tr>
+              <tr><td>19</td><td>Mr. T. Muhunthan</td><td>2014–</td></tr>
+              <tr><td>—</td><td class="current">Mr. V. Uthayamohan</td><td class="current">2025–present</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="principal-note">Rows 1–18 per the college's official Past Principals record. Mr. Muhunthan's appointment in 2014 is drawn from the Historical Notes; the college's public records were not updated between his tenure and Mr. Uthayamohan's 2025 appointment, so exact transition dates are not independently confirmed.</p>
+      </div>
+      <div class="principal-spot">
+        <div class="photo"><img src="https://www.hartley.lk/images/News1/Uthayamokan.jpg" alt="Mr. V. Uthayamohan, Principal"></div>
+        <span class="role">Current Principal · Since 2025</span>
+        <blockquote>"Every pupil who walks through our gates carries the same charge our founders gave us in 1838 — Fiat Lux, let there be light."</blockquote>
+        <cite>Mr. V. Uthayamohan</cite>
+      </div>
+    </div>
+    <div class="leadership-strip reveal">
+      <div class="lead-card"><span class="eyebrow">Deputy Principal</span><h4>Mr. K. Vanimuhunthan</h4><p>B.Sc, PGDE</p></div>
+      <div class="lead-card"><span class="eyebrow">Assistant Principal</span><h4>Mr. V. Suthershan</h4><p>Trained (Maths), B.Ed, M.Ed, PGDEM</p></div>
+      <div class="lead-card"><span class="eyebrow">Assistant Principal</span><h4>Mr. V. Thirukumaran</h4><p>B.Ed, PGDE</p></div>
+    </div>
+  </div>
+</section>
+
+<div class="facts">
+  <div class="wrap facts-grid">
+    <div class="f reveal"><b>1838</b><span>Year founded</span></div>
+    <div class="f reveal"><b>1,178</b><span>Students enrolled</span></div>
+    <div class="f reveal"><b>68+</b><span>Teaching staff</span></div>
+    <div class="f reveal"><b>19+</b><span>Principals since 1851</span></div>
+  </div>
+</div>
+
+<!-- NEWS -->
+<section id="news">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Hartley Today</span>
+      <h2>Latest from the college</h2>
+      <p>A running record of ceremonies, clubs, competitions and community projects — drawn from the college notice board.</p>
+    </div>
+    <div class="news-grid reveal">
+      <a class="news-card feature" href="#" onclick="return false;">
+        <div class="thumb"><img src="https://www.hartley.lk/images/News1/NP1.jpg" alt="Welcoming ceremony for the new principal"></div>
+        <div class="body">
+          <span class="date">2025</span>
+          <h3>Mr. V. Uthayamohan appointed Principal</h3>
+          <p>Fresh leadership arrived at Hartley College this year, bringing renewed energy to the school community.</p>
+          <span class="tag">Leadership</span>
+        </div>
+      </a>
+      <a class="news-card" href="#" onclick="return false;">
+        <div class="thumb"><img src="https://www.hartley.lk/images/News1/IMG_1985.jpg" alt="Aerowings Club launch"></div>
+        <div class="body"><span class="date">Sept 2025</span><h3>Aerowings Club launched</h3><p>A new club dedicated to aeronautics and aviation opened its doors for students.</p><span class="tag">Clubs</span></div>
+      </a>
+      <a class="news-card" href="#" onclick="return false;">
+        <div class="thumb"><img src="https://www.hartley.lk/images/News1/sd1.jpg" alt="Clean Sri Lanka cleaning campaign"></div>
+        <div class="body"><span class="date">June 2025</span><h3>Clean Sri Lanka campaign</h3><p>Parents and students joined forces to clean the school premises nationwide.</p><span class="tag">Community</span></div>
+      </a>
+      <a class="news-card" href="#" onclick="return false;">
+        <div class="thumb"><img src="https://www.hartley.lk/images/News/comp1.jpg" alt="Yarl Geek Challenge robotics team"></div>
+        <div class="body"><span class="date">2022</span><h3>Wins at the Yarl Geek Challenge</h3><p>Student teams placed first in two categories at the provincial robotics round.</p><span class="tag">Innovation</span></div>
+      </a>
+      <a class="news-card" href="#" onclick="return false;">
+        <div class="thumb"><img src="https://www.hartley.lk/images/News/mithun-1.jpg" alt="Felicitation of national athletics achiever"></div>
+        <div class="body"><span class="date">Aug 2022</span><h3>Triple gold for S. Mithunraj</h3><p>Three golds and a national hammer-throw record at the Junior National Athletic Meet.</p><span class="tag">Athletics</span></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="contact" id="contact">
+  <div class="wrap">
+    <div class="section-head on-dark reveal">
+      <span class="eyebrow on-dark">Reach The College</span>
+      <h2>Get in touch</h2>
+      <p>Have a question about admissions, alumni relations, or a visit to the campus? Call, write, or send a message below.</p>
+    </div>
+    <div class="contact-grid reveal">
+      <div class="contact-info">
+        <div class="row"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 10 L12 3 L21 10 V20 H3 Z"/><path d="M9 20 V13 H15 V20"/></svg><div><b>Address</b><span>Hartley College, Point Pedro, Jaffna, Sri Lanka</span></div></div>
+        <div class="row"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 5 C3 14 10 21 19 21 L19 17 L15 16 L13 18 C10 16.5 7.5 14 6 11 L8 9 L7 5 Z"/></svg><div><b>Telephone</b><span>021 226 0292</span></div></div>
+        <div class="row"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="M3 6 L12 13 L21 6"/></svg><div><b>Website</b><span>www.hartley.lk</span></div></div>
+        <div class="social-row">
+          <a href="#" title="Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="#ffd94d" stroke-width="1.6"><path d="M15 8 H13 C12 8 11 9 11 10 V12 H15 L14.5 15 H11 V22 H8 V15 H6 V12 H8 V9.5 C8 7 10 5 12.5 5 H15 Z"/></svg></a>
+          <a href="#" title="YouTube"><svg viewBox="0 0 24 24" fill="none" stroke="#ffd94d" stroke-width="1.6"><rect x="2" y="6" width="20" height="12" rx="3"/><path d="M10 9 L15 12 L10 15 Z"/></svg></a>
+          <a href="#" title="Twitter"><svg viewBox="0 0 24 24" fill="none" stroke="#ffd94d" stroke-width="1.6"><path d="M22 5 C21 5.5 20 6 19 6 C18 5 16.5 4.5 15 5 C13 5.5 12 7.5 12.5 9.5 C9 9.5 6 8 4 5.5 C3 7.5 3.5 9.5 5 11 C4 11 3.2 10.7 2.5 10.3 C2.5 12.3 4 14 6 14.5 C5.2 14.7 4.4 14.7 3.7 14.5 C4.2 16.2 5.8 17.4 7.6 17.5 C6 18.7 4 19.3 2 19.1 C4 20.4 6.4 21 9 21 C15.5 21 19 16 19 11.5 V11 C20 10.2 20.8 9.3 21.5 8.2 C20.6 8.6 19.7 8.9 18.7 9 C19.7 8.4 20.4 7.5 20.7 6.4 C19.8 7 18.8 7.4 17.7 7.6" /></svg></a>
+        </div>
+      </div>
+      <form class="cform">
+        <input type="text" placeholder="Your name">
+        <input type="email" placeholder="Your email">
+        <textarea rows="4" placeholder="Your message"></textarea>
+        <button type="button" class="btn btn-gold" onclick="alert('Thank you — this is a demo form. Please call or write to us directly.')">Send Message</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot-inner">
+    <span>© <span id="yr"></span> Hartley College, Point Pedro. All rights reserved.</span>
+    <span class="motto">Fiat Lux</span>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('yr').textContent = new Date().getFullYear();
+  const progress = document.getElementById('progress');
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    const scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+    progress.style.width = scrolled + '%';
+  });
+  const toggle = document.getElementById('menuToggle');
+  const links = document.getElementById('navLinks');
+  toggle.addEventListener('click', () => links.classList.toggle('open'));
+  links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => links.classList.remove('open')));
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); } });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // Anthem player
+  const audio = document.getElementById('anthemAudio');
+  const playBtn = document.getElementById('playBtn');
+  const playIcon = document.getElementById('playIcon');
+  const atime = document.getElementById('atime');
+  const bars = document.querySelectorAll('#bars span');
+  let barTimer;
+  function fmt(s){ if(!isFinite(s)) return '00:00'; const m=Math.floor(s/60); const sec=Math.floor(s%60); return String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0'); }
+  playBtn.addEventListener('click', () => {
+    if(audio.paused){
+      audio.play().catch(()=>{});
+      playIcon.innerHTML = '<rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/>';
+      barTimer = setInterval(()=>{ bars.forEach(b => b.style.height = (6+Math.random()*18)+'px'); }, 160);
+    } else {
+      audio.pause();
+      playIcon.innerHTML = '<path d="M8 5 L19 12 L8 19 Z"/>';
+      clearInterval(barTimer);
+      bars.forEach(b => b.style.height = '6px');
+    }
+  });
+  audio.addEventListener('timeupdate', () => { atime.textContent = fmt(audio.currentTime) + ' / ' + fmt(audio.duration); });
+  audio.addEventListener('ended', () => { playIcon.innerHTML = '<path d="M8 5 L19 12 L8 19 Z"/>'; clearInterval(barTimer); bars.forEach(b => b.style.height = '6px'); });
+</script>
+
+</body>
+</html>
